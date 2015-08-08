@@ -1,5 +1,107 @@
 <?php 
 
+// logout redirect to new login 
+function wpdemo_logout(){
+	
+	$new_login_page=get_home_url()."/login/";
+	wp_redirect($new_login_page."?login=out");
+	exit;
+	
+	
+}
+
+add_action('wp_logout','wpdemo_logout');
+
+
+function wp_demo_verify_auth($user,$username,$password){
+    
+	if($username=="" or $password==""){
+	$new_login_page=get_home_url()."/login/";
+	wp_redirect($new_login_page."?login=empty");
+	exit;		
+	}
+}
+
+add_filter('authenticate','wp_demo_verify_auth',1,3);
+
+
+
+function wp_demo_login_fail(){
+	
+$new_login_page=get_home_url()."/login/";
+wp_redirect($new_login_page."?login=fail");
+exit;	
+
+}
+
+add_action('wp_login_failed','wp_demo_login_fail');
+
+function login_redirect(){
+
+//old login page
+$visitpage=basename($_SERVER["REQUEST_URI"],".php");
+
+
+//if the user is on the old login page redirect them to the new login 
+// test id the user is on the old login 
+if($visitpage=='wp-login' and $_SERVER['REQUEST_METHOD'] == 'GET'){
+	wp_redirect($new_login_page);	
+	exit;
+}
+
+}
+
+
+add_action('init','login_redirect');
+
+
+
+function wpdemo_member_pay(){
+//check if we are at members page 
+if(is_page("member-pay-roll")){
+//get the path of wordpress login to redirect
+
+	// redirect users to the login page
+	 $url=get_home_url();
+	 if(!current_user_can("administrator")){
+	 wp_redirect($url);
+	 exit;
+} //end of is_admin
+
+}//end of is page	
+
+}//end of function
+
+add_action("get_header","wpdemo_member_pay");
+
+
+
+
+
+//function to protect members page from them that not are logged on
+
+
+function wpdemo_protect_member_page(){
+//check if we are at members page 
+if(is_page("Members")){
+//get the path of wordpress login to redirect
+$login=get_home_url()."/wp-login.php";
+
+
+if (!is_user_logged_in()) {
+	// redirect users to the login page
+	 wp_redirect($login);
+} //end of is_logged
+
+}//end of is page	
+
+}//end of function
+
+add_action("get_header","wpdemo_protect_member_page");
+
+
+
+
 
 
 function wpdemo_load_scripts(){
@@ -9,7 +111,7 @@ wp_enqueue_style( 'default', get_stylesheet_directory_uri().'/css/themes/default
 //load the slider css file
 wp_enqueue_style( 'nivocss', get_stylesheet_directory_uri().'/css/nivo-slider.css');
 // load font-awesome to font awesome script
-wp_enqueue_style( 'font-awesome', get_stylesheet_directory_uri().'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+wp_enqueue_style( 'font-awesome','https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 
 // load the nivo slider plugiin code that needs jquery to run
 wp_enqueue_script( 'nslider', get_stylesheet_directory_uri() . '/js/jquery.nivo.slider.js', array('jquery'), '1.0.0', true );
@@ -161,6 +263,12 @@ echo '<meta name="description" content="' . $desc . '" />';
 }
 
 }
+
+
+
+
+
+
 
 
 function show_contact_form($error="")
@@ -471,10 +579,7 @@ function check_show_request_form_error(){
 	} else {
     $error .= 'Please enter your full name.<br/>';
 	}
-	
-	
-	
-	
+		
 	//phone number
 	$phone=trim($_POST['phone']);
 	//regular expression
