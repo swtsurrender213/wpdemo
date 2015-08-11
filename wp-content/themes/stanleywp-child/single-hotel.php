@@ -66,6 +66,7 @@ $image_full = wp_get_attachment_image_src(get_field('slide1'), 'full');
 $image_full2 = wp_get_attachment_image_src(get_field('slide2'), 'full');
 $image_full3 = wp_get_attachment_image_src(get_field('slide3'), 'full');
 $image_full4 = wp_get_attachment_image_src(get_field('slide4'), 'full');
+
 $image_thumb = wp_get_attachment_image_src(get_field('slide1'), 'thumbnail'); 
 $image_thumb2 = wp_get_attachment_image_src(get_field('slide2'), 'thumbnail');
 $image_thumb3 = wp_get_attachment_image_src(get_field('slide3'), 'thumbnail');

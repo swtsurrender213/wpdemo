@@ -1,5 +1,63 @@
 <?php 
 
+function add_browser_class($classes){
+	
+	global $is_chrome;
+
+	//if chrome  add class to body
+	if($is_chrome){
+	$classes[]="chrome-only";	
+	}
+	return $classes;
+}
+
+add_filter('body_class','add_browser_class');
+
+//USING FILTERS
+// filter to remove bad content from content
+function wp_demo_remove($content){
+//create a list of bad words and put them in a array
+$BadWords=array('shit','fuck');
+
+//loop through array
+foreach($BadWords as $BadWord){
+// replace bad content with a neutral content
+//3 parameters where to find what to replace and content to be reach
+$content=str_ireplace($BadWord,"sorry try again",$content);	
+	
+}
+return $content;
+}
+
+add_filter('the_content','wp_demo_remove');
+
+
+
+
+//APPLYING FILTER
+// filter to remove bad content from content
+function wp_demo_remove_message($message){
+//create a list of bad words and put them in a array
+$BadWords=array('shit','fuck');
+
+//loop through array
+foreach($BadWords as $BadWord){
+// replace bad content with a neutral content
+//3 parameters where to find what to replace and content to be reach
+$message=str_ireplace($BadWord,"sorry try again",$message);	
+	
+}
+return $message;
+}
+
+add_filter('clean_message','wp_demo_remove_message');
+
+
+
+
+
+//LOGOUT
+
 // logout redirect to new login 
 function wpdemo_logout(){
 	
@@ -155,8 +213,12 @@ function insert_contact_info(){
  $fname =  wp_strip_all_tags($_POST['fname']);
  $lname =  wp_strip_all_tags($_POST['lname']);
  $email=   wp_strip_all_tags($_POST['email']);
- $message= wp_strip_all_tags($_POST['message']);
  $phone=trim($_POST['phone']);
+ // two parameters of any name of the filter and what you want to filter
+ //define the filter
+ 
+ $message= wp_strip_all_tags($_POST['message']);
+ 
  
  $fullname= $lname.' '.$fname;
  
@@ -177,6 +239,8 @@ add_post_meta($post_id, 'first_name', $fname);
 add_post_meta($post_id, 'last_name', $lname);
 add_post_meta($post_id, 'email', $email);
 add_post_meta($post_id, 'telephone',$phone);
+
+$message=apply_filters('clean_message',$message);
 add_post_meta($post_id, 'message', $message);
 
 }
