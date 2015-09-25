@@ -1,5 +1,28 @@
 <?php 
 
+function add_menu_item($items,$args){
+
+//echo '<pre>';
+//print_r($args);
+//echo '</pre>';
+
+//echo $args-> theme_location;
+//exit;
+//if the user login show the menu item
+if(is_user_logged_in() and $args->theme_location=='top-bar'){
+
+$member_menu_item='<li id="menu-item-124" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-73 current_page_item active menu-item-124"><a href="http://localhost/wpdemo/members/">Members</a></li>';
+
+$items .= $member_menu_item;
+}
+return $items;
+
+
+}
+
+add_filter('wp_nav_menu_items','add_menu_item',12,2);
+
+
 function add_browser_class($classes){
 	
 	global $is_chrome;

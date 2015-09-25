@@ -42,6 +42,9 @@ if($_GET["login"]=="out"){
 	<div class="row">
 		<div class="col-lg-8 col-lg-offset-2 centered">
 		<?php wp_login_form( $args ); ?> 
+		<!-- redirect to page after password is reset---->
+		<?php $url=get_home_url()."/login/";?>
+		<a href="<?php echo wp_lostpassword_url($url()); ?>" title="Lost Password">Lost Password</a>
 		</div>
 	</div>
 </div>
